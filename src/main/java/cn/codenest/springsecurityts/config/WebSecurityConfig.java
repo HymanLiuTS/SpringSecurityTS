@@ -29,6 +29,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired(required = false)
     MyUserDetailService myUserDetailService;
 
+    //针对全局进行配置
     @Override
     public void configure(WebSecurity web) throws Exception {
         // TODO 关闭spring security
@@ -36,6 +37,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     //TODO 配置用户的方法一
+    //针对用户进行配置
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication().withUser(User.withUsername("user").password("123456").roles("USER").build());
@@ -61,7 +63,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     @Override
-    //这个方法是spring security过滤请求的第一道门卡
+    //这个方法是spring security过滤请求的第一道门卡，针对http路径进行配置
     protected void configure(HttpSecurity http) throws Exception {
 
         http.authorizeRequests()
