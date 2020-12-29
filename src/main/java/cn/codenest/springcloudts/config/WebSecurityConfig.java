@@ -1,20 +1,18 @@
 package cn.codenest.springcloudts.config;
 
+import cn.codenest.springcloudts.service.MyUserDetailService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 /**
  * @author ：Hyman
@@ -27,15 +25,54 @@ import java.io.PrintWriter;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    //todo 方法3，使用自定义的service，三个方法取其1
+    @Autowired(required = false)
+    MyUserDetailService myUserDetailService;
+
     @Override
     public void configure(WebSecurity web) throws Exception {
         // TODO 关闭spring security
         //web.ignoring().antMatchers("/**");
     }
 
+    //TODO 配置用户的方法一
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.inMemoryAuthentication().withUser(User.withUsername("user").password("123456").roles("USER").build());
+        super.configure(auth);
+    }
+
+    //TODO 配置用户的方法2，方法1和2两者取其一，否则方法2会覆盖方法1的配置
+    @Override
+    //@Bean
+    public UserDetailsService userDetailsService() {
+        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
+        //User user = new User(1L, "user", "123456", true, "USER");
+        //User admin = new User(2L, "admin", "123456", true, "ADMIN");
+        manager.createUser(User.withUsername("user").password("123456").roles("USER").build());
+        manager.createUser(User.withUsername("admin").password("123456").roles("ADMIN").build());
+        return manager;
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return NoOpPasswordEncoder.getInstance();//new BCryptPasswordEncoder();
+    }
+
+
     @Override
     //这个方法是spring security过滤请求的第一道门卡
     protected void configure(HttpSecurity http) throws Exception {
+
+        http.authorizeRequests()
+                .antMatchers("/admin/api/*").hasAuthority("ADMIN")//使用hasAuthority时，用户的角色前面不用加ROLE_前缀
+                .antMatchers("/user/api/*").hasRole("USER")//使用hasRole时，用户的角色前面要加ROLE_前缀
+                .antMatchers("/app/api/*").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .formLogin();
+
+
         //这是WebSecurityConfigurerAdapter默认的安全设置
         /*
         ((HttpSecurity) ((HttpSecurity) ((ExpressionUrlAuthorizationConfigurer.
@@ -46,7 +83,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
          */
 
-        ((HttpSecurity) ((HttpSecurity) ((ExpressionUrlAuthorizationConfigurer.
+        //这是自定义登录页面和登录路径的配置
+        /*((HttpSecurity) ((HttpSecurity) ((ExpressionUrlAuthorizationConfigurer.
                 AuthorizedUrl) http.authorizeRequests().
                 anyRequest()).authenticated().//任何请求都要进行认证
                 and()).
@@ -73,7 +111,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             }
         }).
                         and()).
-                csrf().disable();
+                csrf().disable();*/
     }
 
 }

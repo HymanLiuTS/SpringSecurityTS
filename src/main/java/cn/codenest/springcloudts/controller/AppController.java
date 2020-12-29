@@ -4,28 +4,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author ：Hyman
- * @date ：Created in 2020/12/29 9:28
+ * @date ：Created in 2020/12/29 11:20
  * @description：
  * @modified By：
  * @version: $
  */
 @Controller
-@RequestMapping("/user/api")
-public class UserController {
-
+@RequestMapping("/app/api")
+public class AppController {
     @ResponseBody
-    @GetMapping("/name")
+    @GetMapping("/hello")
     public String hello(){
-        return "Hyman";
+        return "Hello World";
     }
-
-    @GetMapping("/login")
-    public String login(){
-        return "Mylogin.html";
-    }
-
 }
