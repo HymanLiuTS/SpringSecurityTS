@@ -21,4 +21,9 @@ public class UserController {
         return "Hello World";
     }
 
+    @GetMapping("/user/login")
+    public String login(){
+        return "Mylogin.html";
+    }
+
 }
