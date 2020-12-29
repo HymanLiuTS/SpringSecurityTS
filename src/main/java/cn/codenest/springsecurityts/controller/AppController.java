@@ -1,4 +1,4 @@
-package cn.codenest.springcloudts.controller;
+package cn.codenest.springsecurityts.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,13 +13,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @version: $
  */
 @Controller
-@RequestMapping("/admin/api")
-public class AdminController {
-
+@RequestMapping("/app/api")
+public class AppController {
     @ResponseBody
-    @GetMapping("/role")
+    @GetMapping("/hello")
     public String hello(){
-        return "admin";
+        return "Hello World";
     }
-
 }

@@ -1,4 +1,4 @@
-package cn.codenest.springcloudts;
+package cn.codenest.springsecurityts;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

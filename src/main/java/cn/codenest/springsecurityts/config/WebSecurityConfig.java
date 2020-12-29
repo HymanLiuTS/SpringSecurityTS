@@ -1,6 +1,6 @@
-package cn.codenest.springcloudts.config;
+package cn.codenest.springsecurityts.config;
 
-import cn.codenest.springcloudts.service.MyUserDetailService;
+import cn.codenest.springsecurityts.service.MyUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;

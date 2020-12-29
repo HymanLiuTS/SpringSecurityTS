@@ -1,6 +1,6 @@
-package cn.codenest.springcloudts.mapper;
+package cn.codenest.springsecurityts.mapper;
 
-import cn.codenest.springcloudts.entity.User;
+import cn.codenest.springsecurityts.entity.User;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;

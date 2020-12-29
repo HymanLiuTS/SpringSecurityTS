@@ -1,4 +1,4 @@
-package cn.codenest.springcloudts;
+package cn.codenest;
 
 
 import org.springframework.boot.test.context.SpringBootTest;

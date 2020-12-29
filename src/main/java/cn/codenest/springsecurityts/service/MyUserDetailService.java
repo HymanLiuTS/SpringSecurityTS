@@ -1,7 +1,7 @@
-package cn.codenest.springcloudts.service;
+package cn.codenest.springsecurityts.service;
 
-import cn.codenest.springcloudts.entity.User;
-import cn.codenest.springcloudts.mapper.UserMapper;
+import cn.codenest.springsecurityts.entity.User;
+import cn.codenest.springsecurityts.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

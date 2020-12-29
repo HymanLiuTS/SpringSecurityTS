@@ -1,4 +1,4 @@
-package cn.codenest.springcloudts.entity;
+package cn.codenest.springsecurityts.entity;
 
 import org.springframework.security.core.GrantedAuthority;
 
