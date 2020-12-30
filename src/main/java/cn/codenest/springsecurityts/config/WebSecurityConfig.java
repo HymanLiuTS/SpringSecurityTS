@@ -69,12 +69,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return manager;
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();//new BCryptPasswordEncoder();
-    }
-
-
     @Override
     //这个方法是spring security过滤请求的第一道门卡，针对http路径进行配置
     protected void configure(HttpSecurity http) throws Exception {
@@ -87,7 +81,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()
         .authenticationDetailsSource(myWebAuthenticationDetailsSource)
-        .permitAll();
+        .permitAll()
+        .and()
+        .csrf().disable();
 
 
         //这是WebSecurityConfigurerAdapter默认的安全设置
