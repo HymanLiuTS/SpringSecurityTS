@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
  * @modified By：
  * @version: $
  */
-@Service
+@Service("userDetailsService")
 public class MyUserDetailService implements UserDetailsService {
 
     @Autowired

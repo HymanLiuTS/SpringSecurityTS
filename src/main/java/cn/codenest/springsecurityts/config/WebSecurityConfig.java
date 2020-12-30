@@ -3,6 +3,8 @@ package cn.codenest.springsecurityts.config;
 import cn.codenest.springsecurityts.service.MyUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.authentication.AuthenticationDetailsSource;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -13,6 +15,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author ：Hyman
@@ -22,12 +27,19 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
  * @version: $
  */
 //EnableWebSecurity注解已经包含Configuration
+//WebSecurityConfigurerAdapter实际上是过滤器
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Autowired
+    private AuthenticationDetailsSource<HttpServletRequest, WebAuthenticationDetails>  myWebAuthenticationDetailsSource;
+
+    @Autowired
+    private AuthenticationProvider authenticationProvider;
+
     //todo 方法3，使用自定义的service，三个方法取其1
     @Autowired(required = false)
-    MyUserDetailService myUserDetailService;
+    UserDetailsService userDetailsService;
 
     //针对全局进行配置
     @Override
@@ -41,6 +53,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication().withUser(User.withUsername("user").password("123456").roles("USER").build());
+        auth.authenticationProvider(authenticationProvider);
         super.configure(auth);
     }
 
@@ -72,7 +85,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/app/api/*").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .formLogin();
+                .formLogin()
+        .authenticationDetailsSource(myWebAuthenticationDetailsSource)
+        .permitAll();
 
 
         //这是WebSecurityConfigurerAdapter默认的安全设置
@@ -115,5 +130,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         and()).
                 csrf().disable();*/
     }
+
+
 
 }
