@@ -71,6 +71,7 @@ public class User implements UserDetails {
         return true;
     }
 
+    //todo 使用会话管理进行会话并发控制时，必须要重载equal和hashcode，因为spring security采用hashmap作为会话信息表，键为User对象，如果不重载这两个方法，会导致对相同用户hash得到不同值
     @Override
     public boolean equals(Object rhs) {
         return rhs instanceof org.springframework.security.core.userdetails.User ? this.username.equals(((org.springframework.security.core.userdetails.User)rhs).getUsername()) : false;

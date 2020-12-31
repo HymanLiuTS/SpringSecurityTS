@@ -16,6 +16,8 @@ import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.InMemoryTokenRepositoryImpl;
+import org.springframework.security.web.session.InvalidSessionStrategy;
+import org.springframework.session.security.SpringSessionBackedSessionRegistry;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -39,6 +41,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private AuthenticationProvider authenticationProvider;
+
+    @Autowired
+    private SpringSessionBackedSessionRegistry sessionRegistry;
+
 
     //todo 方法3，使用自定义的service，三个方法取其1
     @Autowired(required = false)
@@ -90,13 +96,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationDetailsSource(myWebAuthenticationDetailsSource)
                 .permitAll()
                 .and()
-                .rememberMe()//开启自动登录密码的功能
+                .rememberMe()
                 .userDetailsService(userDetailsService)//这里可以显示指定用户服务
                 //.key("mykey")//todo 用散列算法加密用户必要的登录信息并生成令牌。这是设置的是将用户名、密码、过期时间加密时的盐值，否则默认是随机生成的字符串，每次重启服务都会改变
                 .tokenRepository(inMemoryTokenRepository)//todo 使用数据库等持久性数据存储机制用的持久化令牌。
                 .and()
                 .csrf()
-                .disable();
+                .disable()
+                .sessionManagement()//sessionManagement用来管理用户的会话，
+                .sessionFixation().newSession()//设置防御会话固定攻击的策略为newSession，其他还有none，migrateSession，changeSessionId
+                .invalidSessionUrl("/session/invalid")//设置会话过期后跳转的url
+                .invalidSessionStrategy(new InvalidSessionStrategy() {//设置会话过期策略
+                    @Override
+                    public void onInvalidSessionDetected(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException, ServletException {
+
+                    }
+                })
+                .maximumSessions(1)
+                .maxSessionsPreventsLogin(true)//当会话达到最大数时可以阻止新会话的建立
+                .sessionRegistry(sessionRegistry);
 
         //todo 注销的设置
         http.logout()
