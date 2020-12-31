@@ -1,8 +1,6 @@
 package cn.codenest.springsecurityts.config;
 
-import cn.codenest.springsecurityts.service.MyUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -10,14 +8,19 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.security.web.authentication.rememberme.InMemoryTokenRepositoryImpl;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * @author ：Hyman
@@ -73,18 +76,47 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     //这个方法是spring security过滤请求的第一道门卡，针对http路径进行配置
     protected void configure(HttpSecurity http) throws Exception {
 
+        InMemoryTokenRepositoryImpl inMemoryTokenRepository = new InMemoryTokenRepositoryImpl();
+
         http.authorizeRequests()
                 .antMatchers("/admin/api/*").hasAuthority("ADMIN")//使用hasAuthority时，用户的角色前面不用加ROLE_前缀
                 .antMatchers("/user/api/*").hasRole("USER")//使用hasRole时，用户的角色前面要加ROLE_前缀
                 .antMatchers("/app/api/*").permitAll()
-                .anyRequest().authenticated()
+                .anyRequest()
+                .authenticated()
                 .and()
                 .formLogin()
-        .authenticationDetailsSource(myWebAuthenticationDetailsSource)
-        .permitAll()
-        .and()
-        .csrf().disable();
-
+                .authenticationDetailsSource(myWebAuthenticationDetailsSource)
+                .permitAll()
+                .and()
+                .rememberMe()//开启自动登录密码的功能
+                .userDetailsService(userDetailsService)//这里可以显示指定用户服务
+                //.key("mykey")//todo 用散列算法加密用户必要的登录信息并生成令牌。这是设置的是将用户名、密码、过期时间加密时的盐值，否则默认是随机生成的字符串，每次重启服务都会改变
+                .tokenRepository(inMemoryTokenRepository)//todo 使用数据库等持久性数据存储机制用的持久化令牌。
+                .and()
+                .csrf()
+                .disable();
+        http.logout()
+                //指定注销的路由
+                .logoutUrl("/logout")
+                //注销成功后重定向的路由
+                .logoutSuccessUrl("/")
+                .logoutSuccessHandler(new LogoutSuccessHandler() {
+                    @Override
+                    public void onLogoutSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
+                        System.out.println("注销成功");
+                    }
+                })
+                //使改用户的HttpSession失效
+                .invalidateHttpSession(true)
+                //删除指定的cookie
+                .deleteCookies("cookie1", "cookie2")
+                .addLogoutHandler(new LogoutHandler() {
+                    @Override
+                    public void logout(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) {
+                        System.out.println("logout");
+                    }
+                });
 
         //这是WebSecurityConfigurerAdapter默认的安全设置
         /*
