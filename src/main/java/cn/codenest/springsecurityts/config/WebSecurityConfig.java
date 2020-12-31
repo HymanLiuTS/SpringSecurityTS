@@ -78,6 +78,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         InMemoryTokenRepositoryImpl inMemoryTokenRepository = new InMemoryTokenRepositoryImpl();
 
+        //todo 登录的设置
         http.authorizeRequests()
                 .antMatchers("/admin/api/*").hasAuthority("ADMIN")//使用hasAuthority时，用户的角色前面不用加ROLE_前缀
                 .antMatchers("/user/api/*").hasRole("USER")//使用hasRole时，用户的角色前面要加ROLE_前缀
@@ -96,6 +97,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .csrf()
                 .disable();
+
+        //todo 注销的设置
         http.logout()
                 //指定注销的路由
                 .logoutUrl("/logout")
