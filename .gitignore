@@ -1,4 +1,4 @@
-HELP.md
+SpringSecurity基本应用/springsecuritybase/HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/

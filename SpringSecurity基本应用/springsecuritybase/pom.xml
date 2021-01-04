@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>cn.codenest</groupId>
-    <artifactId>springsecurityts</artifactId>
+    <artifactId>springsecuritybase</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>springsecurityts</name>
+    <name>springsecuritybase</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
