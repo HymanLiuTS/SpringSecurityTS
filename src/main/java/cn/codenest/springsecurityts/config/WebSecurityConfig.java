@@ -1,6 +1,7 @@
 package cn.codenest.springsecurityts.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -16,13 +17,18 @@ import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.InMemoryTokenRepositoryImpl;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.session.InvalidSessionStrategy;
 import org.springframework.session.security.SpringSessionBackedSessionRegistry;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * @author ：Hyman
@@ -102,6 +108,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .tokenRepository(inMemoryTokenRepository)//todo 使用数据库等持久性数据存储机制用的持久化令牌。
                 .and()
                 .csrf()
+                //.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())//添加csrftoken仓库
                 .disable()
                 .sessionManagement()//sessionManagement用来管理用户的会话，
                 .sessionFixation().none()//设置防御会话固定攻击的策略为newSession，其他还有none，migrateSession，changeSessionId
@@ -181,5 +188,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 
+    @Bean
+    CorsConfigurationSource corsConfigurationSource(){
+        CorsConfiguration configuration=new CorsConfiguration();
+        //允许从百度跨域访问
+        configuration.setAllowedOrigins(Arrays.asList("https://www.baidu.com"));
+        //允许使用GET、POST方法
+        configuration.setAllowedMethods(Arrays.asList("GET","POST"));
+        //允许带凭证
+        configuration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source=new UrlBasedCorsConfigurationSource();
+        //对所有的url生效
+        source.registerCorsConfiguration("/**",configuration);
+        return source;
+    }
 
 }
