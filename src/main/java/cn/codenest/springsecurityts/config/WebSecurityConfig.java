@@ -104,7 +104,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf()
                 .disable()
                 .sessionManagement()//sessionManagement用来管理用户的会话，
-                .sessionFixation().newSession()//设置防御会话固定攻击的策略为newSession，其他还有none，migrateSession，changeSessionId
+                .sessionFixation().none()//设置防御会话固定攻击的策略为newSession，其他还有none，migrateSession，changeSessionId
                 .invalidSessionUrl("/session/invalid")//设置会话过期后跳转的url
                 .invalidSessionStrategy(new InvalidSessionStrategy() {//设置会话过期策略
                     @Override
@@ -112,8 +112,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                     }
                 })
-                .maximumSessions(1)
-                .maxSessionsPreventsLogin(true)//当会话达到最大数时可以阻止新会话的建立
+                .maximumSessions(10)
+                .maxSessionsPreventsLogin(false)//true,当会话达到最大数时可以阻止新会话的建立
                 .sessionRegistry(sessionRegistry);
 
         //todo 注销的设置
