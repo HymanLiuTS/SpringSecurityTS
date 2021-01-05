@@ -1,0 +1,8 @@
+{
+  "@class":"org.apereo.cas.services.RegexRegisteredService",
+  "serviceId":"^https://client.cas.chenmuxin.cn",
+  "name":"cas client",
+  "id":10000,
+  "description":"cas client base on spring security",
+  "evaluationOrder":1
+}
