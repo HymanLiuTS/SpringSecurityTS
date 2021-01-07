@@ -14,9 +14,9 @@ spring:
       client:
         registration:
           github:
-            client-id: 23215d932d21213631212109029fb21230c
-            client-secret: 1a92ff0ec7e365as7be617b
-            redirect-uri-template: "{baseUrl/register/social/{registraionId}"
+            client-id: 35d9329fb30c
+            client-secret: 1a920ec7e3657be617b1b534d590404e
+            redirect-uri-template: "{baseUrl}/register/social/{registraionId}"
           qq:
             client-id: 23215d932d21213631212109029fb21230c
             client-secret: 1a92ff0ec7e365as7be617b
@@ -25,7 +25,7 @@ spring:
             authorization-grant-type: authorization_code
             client_authentication-method: post
             scope: get_user_info,list_album,upload_pic,do_like
-            redirect-uri-template: "{baseUrl/register/social/{registraionId}"
+            redirect-uri-template: "{baseUrl}/register/social/{registraionId}"
         provider:
           qq:
             #获取code
