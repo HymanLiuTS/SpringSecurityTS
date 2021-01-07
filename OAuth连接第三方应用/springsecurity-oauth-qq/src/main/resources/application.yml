@@ -28,7 +28,10 @@ spring:
             redirect-uri-template: "{baseUrl/register/social/{registraionId}"
         provider:
           qq:
+            #获取code
             authorization-uri: https://graph.qq.com/oauth2.0/authorize
+            #获取token
             token-uri: https://graph.qq.com/oauth2.0/token
+            #获取openid
             user-info-uri: https//graph.qq.com/oauth2.0/me
             user-name-attribute: "nickname"
