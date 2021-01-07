@@ -13,8 +13,9 @@ import java.util.Map;
 
 /**
  * <h3>springsecurityts</h3>
- * <p></p>
- *
+ * <p>
+ *     QQ用户信息
+ * </p>
  * @author : Hyman
  * @date : 2021-01-06 19:03
  **/
