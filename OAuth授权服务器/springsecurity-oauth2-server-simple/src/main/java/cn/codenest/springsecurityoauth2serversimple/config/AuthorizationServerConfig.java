@@ -47,7 +47,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .accessTokenValiditySeconds(7200)
                 .refreshTokenValiditySeconds(72000)
                 //重定向url，由客户端填写，服务器携带授权码会重定向该url
-                .redirectUris("http://localhost:8080/login/oauth2/code/authorizationserver")
+                .redirectUris("http://localhost:18889/login/oauth2/code/authorizationserver","http://127.0.0.1:18889/login/oauth2/code/authorizationserver")
                 .additionalInformation()
                 //该client可以访问的资源服务器ID，每个资源服务器都有一个ID
                 .resourceIds(ResourceServerConfig.RESOURCE_ID)
