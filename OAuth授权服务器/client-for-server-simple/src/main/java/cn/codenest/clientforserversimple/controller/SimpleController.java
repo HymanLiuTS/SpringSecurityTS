@@ -17,7 +17,7 @@ public class SimpleController {
 
     @GetMapping("/hello")
     public String hello(Principal principal) {
-        return "Hello " + principal.getName();
+        return "Hello ";
     }
 
 }
