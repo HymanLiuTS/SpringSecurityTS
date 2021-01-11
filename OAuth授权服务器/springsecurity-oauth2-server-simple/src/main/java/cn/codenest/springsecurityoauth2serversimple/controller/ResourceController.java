@@ -25,7 +25,7 @@ public class ResourceController {
 
     @RequestMapping("/me")
     public Principal me(Principal principal) {
-        logger.debug(principal.toString());
+        logger.info("Principal=" + principal.toString());
         return principal;
     }
 
