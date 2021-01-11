@@ -47,10 +47,10 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .accessTokenValiditySeconds(7200)
                 .refreshTokenValiditySeconds(72000)
                 //重定向url，由客户端填写，服务器携带授权码会重定向该url
-                .redirectUris("http://localhost:18889/login/oauth2/code/authorizationserver","http://127.0.0.1:18889/login/oauth2/code/authorizationserver")
+                .redirectUris("http://localhost:18889/login/oauth2/code/authorizationserver", "http://127.0.0.1:18889/login/oauth2/code/authorizationserver", "http://172.17.6.75:18889/login/oauth2/code/authorizationserver")
                 .additionalInformation()
                 //该client可以访问的资源服务器ID，每个资源服务器都有一个ID
-                .resourceIds(ResourceServerConfig.RESOURCE_ID)
+                .resourceIds(ResourceServerConfig.RESOURCE_ID, "resouirceserver")
                 //该Client拥有的权限，资源服务器可以根据该处订的权限对client进行鉴权
                 .authorities("ROLE_CLIENT")
                 //该client可以访问的资源的范围，资源服务器可以根据该处定义的方位对client进行鉴权
@@ -58,6 +58,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 //自动批准的范围（scope）,自动批准的scope在批准页不需要显示，即不需要用户确认批准。如果所有的scope都自动
                 //批准，则不显示批准页
                 .autoApprove("profile");
+        //todo 这里可以设置客户端信息存储到数据库里面
+        //clients.jdbc(dataSource());
     }
 
     /*
@@ -68,6 +70,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         super.configure(endpoints);
+        //todo 这里可以设置jdbcTokenStore，将产生的token放到数据库中，默认存到内存中;管理token存储位置的抽象接口是
+        //TokenStore，具体实现类有 InMemoryTokenStore、JdbcTokenStore、JwtTokenStore 和RedisTokenStore\        //endpoints.tokenStore(jdbcTokenStore())
     }
 
 
