@@ -34,7 +34,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         logger.info("ResourceServerConfig中配置HttpSecurity对象执行");
-        //只有/me端点作为资源服务器的资源
+        //只有/me端点作为资源服务器的资源,否则oauth会把所有的端点当成oauth资源服务资源
         http.requestMatchers().antMatchers("/me", "/phone")
                 .and()
                 .authorizeRequests()
