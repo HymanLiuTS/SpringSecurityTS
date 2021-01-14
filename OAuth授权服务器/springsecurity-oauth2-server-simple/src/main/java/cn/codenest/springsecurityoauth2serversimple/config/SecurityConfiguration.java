@@ -43,6 +43,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        //todo 一旦使用@EnableResourceServer，ResourceServerConfig的http配置会将WebSecurityConfigurer中http的配置覆盖掉
         logger.info("SecurityConfiguration 中配置 HttpSecurity对象执行");
         http.authorizeRequests()
                 .antMatchers("/").permitAll()
