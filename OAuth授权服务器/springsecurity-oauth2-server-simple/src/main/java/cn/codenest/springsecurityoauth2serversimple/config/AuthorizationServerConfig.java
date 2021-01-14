@@ -3,6 +3,7 @@ package cn.codenest.springsecurityoauth2serversimple.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -41,7 +42,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 //cliet_secret
                 .secret(passwordEncoder.encode("client-for-server"))
                 //改client支持的授权模式。OAuth的Client在请求code时，只有传递授权模式参数，该处包含的授权模式才可以访问
-                .authorizedGrantTypes("authorization_code", "implicit")
+                .authorizedGrantTypes("authorization_code", "implicit","password")
                 //该client分配的access_token的有效时间要少于刷新时间
                 //超过有效时间，但在可刷新时间范围内的access_token也可以刷新
                 .accessTokenValiditySeconds(7200)
@@ -62,6 +63,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         //clients.jdbc(dataSource());
     }
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
     /*
      * 该方法是用来配置授权服务器特性的（Authorization Server endpoints ）,主要是一些非安全的特性，比如
      * token存储、token的定义、授权模式等等
@@ -69,7 +73,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
      */
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-        super.configure(endpoints);
+        endpoints.authenticationManager(authenticationManager);
         //todo 这里可以设置jdbcTokenStore，将产生的token放到数据库中，默认存到内存中;管理token存储位置的抽象接口是
         //TokenStore，具体实现类有 InMemoryTokenStore、JdbcTokenStore、JwtTokenStore 和RedisTokenStore\        //endpoints.tokenStore(jdbcTokenStore())
     }
