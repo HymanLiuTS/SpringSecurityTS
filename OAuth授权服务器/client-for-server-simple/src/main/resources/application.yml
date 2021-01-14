@@ -1,0 +1,21 @@
+server:
+  port: 18889
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          authorizationserver:
+            client-id: client-for-server
+            client-secret: client-for-server
+            provider: authorizationserver
+            authorization-grant-type: authorization_code
+            client-authentication-method: basic
+            scope: profile,email,phone
+            redirect-uri-template: "{baseUrl}/login/oauth2/code/{registrationId}"
+        provider:
+          authorizationserver:
+            authorization-uri: http://172.17.6.75:9998/oauth/authorize
+            token-uri: http://172.17.6.75:9998/oauth/token
+            user-info-uri: http://172.17.6.75:9998/me
+            user-name-attribute: "name"
